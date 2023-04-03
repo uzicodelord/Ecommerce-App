@@ -99,7 +99,7 @@
             </div>
                 <div class="div_flex">
                     <label for="color">Color</label>
-                    <input type="text" name="name" id="color" class="text-color form-control" value="color">
+                    <input type="text" name="attribute_name" id="color" class="text-color form-control" value="color">
                     <input type="text" name="attributes[0][value]" id="color_value" class="text-color form-control">
                 <button class="btn btn-primary div_flex" type="button" id="add-attribute-value">Add Attribute Value</button>
                 <div class="text-color" id="attribute-values-container"></div>

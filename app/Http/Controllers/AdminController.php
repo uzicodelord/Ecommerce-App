@@ -86,14 +86,14 @@ class AdminController extends Controller
         $attributes = $request->input('attributes', []);
         foreach ($attributes as $attribute) {
             $value = $attribute['value'];
+            $name = $request->input('attribute_name');
 
             $productAttribute = new Attribute();
             $productAttribute->value = $value;
-            $productAttribute->name = "Color";
+            $productAttribute->name = $name;
 
             $product->attributes()->save($productAttribute);
         }
-
         return redirect()->back()->with('message', 'Product added successfully');
     }
 
