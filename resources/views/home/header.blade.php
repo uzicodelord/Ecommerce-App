@@ -30,9 +30,14 @@
                         <a class="nav-link fa fa-phone" id="contact-link" href="{{ url('contact') }}" style="font-size: 30px;"></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fa fa-shopping-cart" id="cart-link" href="{{ url('cart') }}" style="font-size: 30px;"></a>
+                        <a class="nav-link fa fa-shopping-cart" href="{{ url('cart') }}" style="font-size: 30px; position: relative;">
+                            <!-- Badge with item count -->
+                            <span class="badge badge-pill badge-danger" style="font-size: 10px;position: absolute; top: 0px; right: 10px;">
+                            {{ $cart_count }}
+                            </span>
+                        </a>
                     </li>
-                    @if (Route::has('login'))
+                @if (Route::has('login'))
                         @auth
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown fa fa-user mdi mdi-account" href="#" id="accountDropdown" role="button"
@@ -75,6 +80,5 @@
             $(this).find(".dropdown-menu").first().stop(true, true).slideDown(300);
         });
     });
-
 </script>
 

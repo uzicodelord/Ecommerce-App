@@ -13,10 +13,7 @@
             <div><img src="{{ asset('product/' . $product->image2) }}"></div>
         </div>
     </div>
-
-
     <div class="detail-box" style="flex: 1; margin-left: 30px;">
-        <h4 style="font-size: 1.5rem;">{{ $product->description }}</h4>
         <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">{{ $product->title }}</h3>
         <h4 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Category: {{ $product->category }}</h4>
         <h4 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: #78CF8A;">In Stock</h4>
@@ -205,6 +202,23 @@
         max-width: 800px;
         margin: 0 auto;
         padding: 30px 20px;
+    }
+    @media (max-width: 768px) {
+        .product-container {
+            flex-direction: column;
+            max-width: 100%;
+        }
+
+        .product-images {
+            flex-basis: 100%;
+            max-width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .detail-box {
+            flex-basis: 100%;
+            margin-left: 0;
+        }
     }
 </style>
 <script>

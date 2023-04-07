@@ -53,12 +53,12 @@
                 <br>
                 <input class="text-color" type="text" name="title" placeholder="Title of the product" required>
             </div>
-            <div class="div_flex">
-                <label>Product Description</label>
-                <br>
-                <input class="text-color" type="text" name="description" placeholder="Description.." required>
-            </div>
-            <div class="div_flex">
+                <div class="div_flex">
+                    <label>Product Description</label>
+                    <br>
+                    <textarea class="text-color" name="description" placeholder="Description.." required></textarea>
+                </div>
+                <div class="div_flex">
                 <label>Product Price</label>
                 <br>
                 <input class="text-color" type="number" name="price" placeholder="Price of the product" required>
@@ -98,12 +98,15 @@
                 <input class="xxx" type="file" name="image2">
             </div>
                 <div class="div_flex">
-                    <label for="color">Color</label>
-                    <input type="text" name="attribute_name" id="color" class="text-color form-control" value="color">
-                    <input type="text" name="attributes[0][value]" id="color_value" class="text-color form-control">
-                <button class="btn btn-primary div_flex" type="button" id="add-attribute-value">Add Attribute Value</button>
-                <div class="text-color" id="attribute-values-container"></div>
+
+                <div id="attributes-container">
+                    <div class="form-group">
+                        <input type="text" name="attribute_name[]" class="form-control attribute-name" placeholder="Attribute name">
+                        <input type="text" name="attribute_values[]" class="form-control attribute-value" placeholder="Attribute values (comma separated)">
+                    </div>
                 </div>
+                </div>
+                <button type="button" id="add-attribute-btn" class="btn btn-primary">Add Attribute</button>
                 <div class="div_flex">
                 <br>
                 <input type="submit" class="btn btn-primary" value="Add Product">
@@ -119,46 +122,20 @@
     <!-- End custom js for this page -->
 </body>
 <script>
-    const attributeValuesContainer = document.getElementById('attribute-values-container');
-    const addAttributeValueButton = document.getElementById('add-attribute-value');
-    let attributeValueIndex = 0;
+    $(document).ready(function() {
+        $('#add-attribute-btn').click(function() {
+            var container = $('#attributes-container');
 
-    addAttributeValueButton.addEventListener('click', () => {
-        const attributeValueInput = `
-    <div>
-        <label for="attribute-${attributeValueIndex}-value">Attribute Value ${attributeValueIndex + 1}:</label>
-        <input type="text" name="attributes[${attributeValueIndex}][value]" id="attribute-${attributeValueIndex}-value" required>
-        <button type="button" class="remove-attribute-value">Remove</button>
-    </div>
-    `;
-        attributeValuesContainer.insertAdjacentHTML('beforeend', attributeValueInput);
-        attributeValueIndex++;
+            // Create new attribute input fields
+            var attributeGroup = $('<div>').addClass('form-group');
+            var attributeNameInput = $('<input>').attr('type', 'text').attr('name', 'attribute_name[]').addClass('form-control attribute-name').attr('placeholder', 'Attribute name');
+            var attributeValueInput = $('<input>').attr('type', 'text').attr('name', 'attribute_values[]').addClass('form-control attribute-value').attr('placeholder', 'Attribute values (comma separated)');
 
-        // Add event listener to remove attribute value button
-        const removeAttributeValueButtons = document.querySelectorAll('.remove-attribute-value');
-        removeAttributeValueButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                button.parentElement.remove();
-                updateAttributeIndexes();
-            });
+            // Add the new attribute fields to the container
+            attributeGroup.append(attributeNameInput).append(attributeValueInput);
+            container.append(attributeGroup);
         });
     });
-
-    function updateAttributeIndexes() {
-        const attributeValueInputs = attributeValuesContainer.querySelectorAll('input[name^="attributes"]');
-        attributeValueIndex = attributeValueInputs.length;
-        attributeValueInputs.forEach((input, index) => {
-            input.name = `attributes[${index}][value]`;
-            input.parentElement.querySelector('label').textContent = `Attribute Value ${index + 1}:`;
-        });
-    }
-
-    // Add event listener to the form submit event
-    const productForm = document.getElementById('product-form');
-    productForm.addEventListener('submit', () => {
-        updateAttributeIndexes();
-    });
-
 
 </script>
 </html>

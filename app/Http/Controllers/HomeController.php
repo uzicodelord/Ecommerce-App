@@ -18,9 +18,24 @@ use RealRashid\SweetAlert\Facades\Alert;
 class HomeController extends Controller
 {
 
+    protected $cart_count;
+    protected $categories;
+
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            $this->cart_count = Cart::where('user_id', Auth::id())->count();
+            $this->categories = Category::orderBy('category_name', 'asc')->get();
+
+            view()->share('cart_count', $this->cart_count);
+            view()->share('categories', $this->categories);
+
+            return $next($request);
+        });
+    }
     public function index(){
         $categories = Category::orderBy('category_name', 'asc')->get();
-        $products = Product::paginate(9);
+        $products = Product::simplePaginate(12);
         return view('home.userpage', compact('products', 'categories'));
     }
 
@@ -246,14 +261,12 @@ class HomeController extends Controller
 
     public function search(Request $request)
     {
-        $categories = Category::orderBy('category_name', 'asc')->get();
-        $searchQuery = $request->input('query');
-        $products = Product::where('title', 'LIKE', "%$searchQuery%")
-            ->orWhere('description', 'LIKE', "%$searchQuery%")
-            ->orWhere('category', 'LIKE', "%$searchQuery%")
-            ->paginate(9);
-        return view('home.search', compact('products', 'searchQuery', 'categories'));
+        $query = $request->input('q');
+        $products = Product::where('title', 'LIKE', "%$query%")
+            ->orWhere('description', 'LIKE', "%$query%")
+            ->orWhere('category', 'LIKE', "%$query%")
+            ->get();
+
+        return response()->json($products);
     }
-
-
 }

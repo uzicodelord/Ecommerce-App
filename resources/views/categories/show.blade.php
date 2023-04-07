@@ -42,8 +42,9 @@
 <body>
 
 @include('sweetalert::alert')
+@include('home.header')
+
 <div class="container">
-    @include('home.header')
     <div style="margin-bottom: 10px;"><a style="font-weight: bold;" href="{{ url()->previous() }}"><i class="fa fa-arrow-left"></i> Back</a></div>
     <h1 style="font-size: 30px;font-family: Gabriola;font-weight: bold;">{{ $category->category_name }}</h1>
     <br>
@@ -99,7 +100,6 @@
         </div>
     </div>
 </div>
-@include('home.script')
 <script>
 
     $(document).ready(function(){

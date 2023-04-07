@@ -17,9 +17,7 @@
     <!-- subscribe section -->
     @include('home.subscribe')
     <!-- end subscribe section -->
-    <!-- footer start -->
-    @include('home.footer')
-    <!-- footer end -->
+
 </div>
 </body>
 </html>

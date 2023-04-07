@@ -8,13 +8,21 @@ function myMap() {
     var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
 }
 
-function updateQuantity() {
-    // Get the quantity input element
-    var quantityInput = document.getElementById("quantity");
-
-    // Get the hidden quantity field in the form
-    var quantityField = document.getElementById("quantity-field");
-
-    // Set the value of the hidden quantity field to the value of the quantity input
-    quantityField.value = quantityInput.value;
+function initSlider() {
+    $('.slider').slick({
+        dots: false,
+        arrows: false,
+        prevArrow: '<button type="button" class="slick-prev">&#8249;</button>',
+        nextArrow: '<button type="button" class="slick-next">&#8250;</button>',
+        infinite: true,
+        speed: 600,
+        slidesToShow: 1,
+        adaptiveHeight: true,
+        variableWidth: true,
+        centerMode: true,
+        variableWidth: true,
+        draggable: true,
+        autoplay: true,
+        autoplaySpeed: 3000
+    });
 }

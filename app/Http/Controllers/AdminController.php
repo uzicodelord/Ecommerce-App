@@ -83,22 +83,41 @@ class AdminController extends Controller
 
         $product->save();
 
-        $attributes = $request->input('attributes', []);
-        foreach ($attributes as $attribute) {
-            $value = $attribute['value'];
-            $name = $request->input('attribute_name');
+        $attributeNames = $request->input('attribute_name', []);
+        $attributeValues = $request->input('attribute_values', []);
 
-            $productAttribute = new Attribute();
-            $productAttribute->value = $value;
-            $productAttribute->name = $name;
+        $attributes = [];
 
-            $product->attributes()->save($productAttribute);
+        foreach ($attributeNames as $i => $name) {
+            $values = explode(',', $attributeValues[$i]);
+            $values = array_map('trim', $values);
+
+            if (!isset($attributes[$name])) {
+                $attributes[$name] = [];
+            }
+
+            foreach ($values as $value) {
+                if (!in_array($value, $attributes[$name])) {
+                    $attributes[$name][] = $value;
+                }
+            }
         }
+
+        foreach ($attributes as $name => $values) {
+            foreach ($values as $value) {
+                $attribute = new Attribute();
+                $attribute->name = $name;
+                $attribute->value = $value;
+                $product->attributes()->save($attribute);
+            }
+        }
+
         return redirect()->back()->with('message', 'Product added successfully');
     }
 
 
-    public function showProduct()
+
+        public function showProduct()
     {
         $product = Product::all();
         $attributes = Attribute::all();
@@ -118,36 +137,76 @@ class AdminController extends Controller
     {
         $product = Product::find($id);
         $category = Category::all();
+        $attributes = Attribute::where('product_id', $id)->get();
 
-        return view('admin.update',compact('product', 'category'));
+        return view('admin.update',compact('product', 'category', 'attributes'));
     }
 
-    public function updateProductConfirm(Request $request,$id){
-        $product = Product::find($id);
+    public function updateProductConfirm(Request $request, $id)
+    {
+        $product = Product::findOrFail($id);
         $product->title = $request->title;
         $product->description = $request->description;
         $product->price = $request->price;
         $product->quantity = $request->quantity;
-        $product->discountprice = $request->discount_price;
+        $product->discountprice = $request->discountprice;
         $product->category = $request->category;
+
+        // Upload and save the main image
         $image = $request->image;
-        if ($image){
-            $imagename = time() . '.' . $image->getClientOriginalExtension();
-            $request->image->move('product', $imagename);
-            $product->image = $imagename;
+        if ($image) {
+            $image_name = time() . '.' . $image->getClientOriginalExtension();
+            $request->image->move('product', $image_name);
+            $product->image = $image_name;
+        }
+
+        // Upload and save the first image
+        $image1 = $request->image1;
+        if ($image1) {
+            $image1_name = time() . '_1.' . $image1->getClientOriginalExtension();
+            $request->image1->move('product', $image1_name);
+            $product->image1 = $image1_name;
+        }
+
+        // Upload and save the second image
+        $image2 = $request->image2;
+        if ($image2) {
+            $image2_name = time() . '_2.' . $image2->getClientOriginalExtension();
+            $request->image2->move('product', $image2_name);
+            $product->image2 = $image2_name;
         }
 
         $product->save();
 
-        $attributes = $request->input('attributes', []);
-        foreach ($attributes as $attribute) {
-            $value = $attribute['value'];
+        $attributeNames = $request->input('attribute_name', []);
+        $attributeValues = $request->input('attribute_values', []);
 
-            $productAttribute = new Attribute();
-            $productAttribute->name = "Color";
-            $productAttribute->value = $value;
+        $attributes = [];
 
-            $product->attributes()->save($productAttribute);
+        foreach ($attributeNames as $i => $name) {
+            $values = explode(',', $attributeValues[$i]);
+            $values = array_map('trim', $values);
+
+            if (!isset($attributes[$name])) {
+                $attributes[$name] = [];
+            }
+
+            foreach ($values as $value) {
+                if (!in_array($value, $attributes[$name])) {
+                    $attributes[$name][] = $value;
+                }
+            }
+        }
+
+        $product->attributes()->delete();
+
+        foreach ($attributes as $name => $values) {
+            foreach ($values as $value) {
+                $attribute = new Attribute();
+                $attribute->name = $name;
+                $attribute->value = $value;
+                $product->attributes()->save($attribute);
+            }
         }
 
         return redirect()->back()->with('message', 'Product updated successfully');
